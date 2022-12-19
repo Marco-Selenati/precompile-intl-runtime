@@ -152,25 +152,25 @@ describe("__date", function () {
 describe("__time", function () {
   it('formats times on the "short" format by default', function () {
     let wedding = new Date(Date.UTC(2013, 11, 18, 19, 13, 50));
-    expect(__time(wedding)).toBe("7:13 PM");
+    expect(__time(wedding)).toBe("7:13 PM");
   });
 
   it('accepts "short", "medium", "long" and "full" as second argument', function () {
     let wedding = new Date(Date.UTC(2013, 11, 18, 19, 13, 50));
-    expect(__time(wedding, "short")).toBe("7:13 PM");
-    expect(__time(wedding, "medium")).toBe("7:13:50 PM");
-    expect(__time(wedding, "long")).toBe("7:13:50 PM GMT");
-    expect(__time(wedding, "full")).toBe("7:13:50 PM GMT");
+    expect(__time(wedding, "short")).toBe("7:13 PM");
+    expect(__time(wedding, "medium")).toBe("7:13:50 PM");
+    expect(__time(wedding, "long")).toBe("7:13:50 PM GMT");
+    expect(__time(wedding, "full")).toBe("7:13:50 PM GMT");
   });
 
   it("accepts custom formats preconfigured when the library was initialized", function () {
     let wedding = new Date(Date.UTC(2013, 11, 18, 19, 13, 50));
-    expect(__time(wedding, "hour")).toBe("7 PM");
+    expect(__time(wedding, "hour")).toBe("7 PM");
   });
 
   it("honours current locale setting", function () {
     let wedding = new Date(Date.UTC(2013, 11, 18, 19, 13, 50));
-    expect(__time(wedding, "hour")).toBe("7 PM");
+    expect(__time(wedding, "hour")).toBe("7 PM");
     locale.set("de");
     expect(__time(wedding, "hour")).toBe("19 Uhr");
   });
@@ -303,8 +303,8 @@ describe("time", function () {
   let wedding = new Date(Date.UTC(2013, 11, 18, 19, 13, 50));
   it("formats the given time in the current locale with the given style (if any)", () => {
     let unsubscribe = time.subscribe((format) => {
-      expect(format(wedding)).toBe("7:13 PM");
-      expect(format(wedding, { format: "full" })).toBe("7:13:50 PM GMT");
+      expect(format(wedding)).toBe("7:13 PM");
+      expect(format(wedding, { format: "full" })).toBe("7:13:50 PM GMT");
     });
     unsubscribe();
   });

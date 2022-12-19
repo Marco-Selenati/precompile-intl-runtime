@@ -41,8 +41,7 @@ export const formatMessage: MessageFormatter = (
 
   if (typeof message === "string") {
     return message;
-  }
-  if (typeof message === "function") {
+  } else if (typeof message === "function") {
     return message(
       ...Object.keys(values || {})
         .sort()

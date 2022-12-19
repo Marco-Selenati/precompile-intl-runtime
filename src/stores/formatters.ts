@@ -1,5 +1,6 @@
 import { derived } from "svelte/store";
 import {
+  MessageFormatter,
   TimeFormatter,
   DateFormatter,
   NumberFormatter,
@@ -16,11 +17,26 @@ import { getCurrentLocale } from "../includes/utils";
 import { $dictionary } from "./dictionary";
 import { $locale } from "./locale";
 
-export const formatMessage = (
-  locale: string,
-  id: string,
-  values: Record<string, any> = {}
+export const formatMessage: MessageFormatter = (
+  currentLocale,
+  optionsOrId,
+  maybeOptions = {}
 ) => {
+  const id = typeof optionsOrId === "string" ? optionsOrId : optionsOrId.id;
+  const options = typeof optionsOrId === "string" ? maybeOptions : optionsOrId;
+
+  const {
+    values,
+    locale = currentLocale || getCurrentLocale(),
+    default: defaultValue,
+  } = options;
+
+  if (locale == null) {
+    throw new Error(
+      "[svelte-intl-precompile] Cannot format a message without first setting the initial locale."
+    );
+  }
+
   let message = lookup(id, locale);
 
   if (typeof message === "string") {
@@ -30,11 +46,11 @@ export const formatMessage = (
     return message(
       ...Object.keys(values || {})
         .sort()
-        .map((k) => values[k])
+        .map((k) => (values || {})[k])
     );
   }
 
-  return id;
+  return defaultValue || id;
 };
 
 export const getJSON: JsonGetter = (id, locale) => {

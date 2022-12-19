@@ -152,27 +152,63 @@ describe("__date", function () {
 describe("__time", function () {
   it('formats times on the "short" format by default', function () {
     let wedding = new Date(Date.UTC(2013, 11, 18, 19, 13, 50));
-    expect(__time(wedding)).toBe("7:13 PM");
+    expect(__time(wedding)).toBe(
+      new Intl.DateTimeFormat("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+      }).format(wedding)
+    );
   });
 
   it('accepts "short", "medium", "long" and "full" as second argument', function () {
     let wedding = new Date(Date.UTC(2013, 11, 18, 19, 13, 50));
-    expect(__time(wedding, "short")).toBe("7:13 PM");
-    expect(__time(wedding, "medium")).toBe("7:13:50 PM");
-    expect(__time(wedding, "long")).toBe("7:13:50 PM GMT");
-    expect(__time(wedding, "full")).toBe("7:13:50 PM GMT");
+    expect(__time(wedding, "short")).toBe(
+      new Intl.DateTimeFormat("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+      }).format(wedding)
+    );
+    expect(__time(wedding, "medium")).toBe(
+      new Intl.DateTimeFormat("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+      }).format(wedding)
+    );
+    expect(__time(wedding, "long")).toBe(
+      new Intl.DateTimeFormat("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        timeZoneName: "short",
+      }).format(wedding)
+    );
+    expect(__time(wedding, "full")).toBe(
+      new Intl.DateTimeFormat("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        timeZoneName: "short",
+      }).format(wedding)
+    );
   });
 
   it("accepts custom formats preconfigured when the library was initialized", function () {
     let wedding = new Date(Date.UTC(2013, 11, 18, 19, 13, 50));
-    expect(__time(wedding, "hour")).toBe("7 PM");
+    expect(__time(wedding, "hour")).toBe(
+      new Intl.DateTimeFormat("en-US", { hour: "numeric" }).format(wedding)
+    );
   });
 
   it("honours current locale setting", function () {
     let wedding = new Date(Date.UTC(2013, 11, 18, 19, 13, 50));
-    expect(__time(wedding, "hour")).toBe("7 PM");
+    expect(__time(wedding, "hour")).toBe(
+      new Intl.DateTimeFormat("en-US", { hour: "numeric" }).format(wedding)
+    );
     locale.set("de");
-    expect(__time(wedding, "hour")).toBe("19 Uhr");
+    expect(__time(wedding, "hour")).toBe(
+      new Intl.DateTimeFormat("de", { hour: "numeric" }).format(wedding)
+    );
   });
 });
 
@@ -303,8 +339,20 @@ describe("time", function () {
   let wedding = new Date(Date.UTC(2013, 11, 18, 19, 13, 50));
   it("formats the given time in the current locale with the given style (if any)", () => {
     let unsubscribe = time.subscribe((format) => {
-      expect(format(wedding)).toBe("7:13 PM");
-      expect(format(wedding, { format: "full" })).toBe("7:13:50 PM GMT");
+      expect(format(wedding)).toBe(
+        new Intl.DateTimeFormat("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+        }).format(wedding)
+      );
+      expect(format(wedding, { format: "full" })).toBe(
+        new Intl.DateTimeFormat("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric",
+          timeZoneName: "short",
+        }).format(wedding)
+      );
     });
     unsubscribe();
   });
@@ -326,9 +374,10 @@ describe("date", function () {
 describe("number", function () {
   let num = 123456.789;
   it("formats the given number in the current locale with the given style (if any)", () => {
-    number.subscribe((format) => {
+    let unsubscribe = number.subscribe((format) => {
       expect(format(num)).toBe("123,456.789");
       expect(format(num, { format: "eur" })).toBe("€123,456.79");
     });
+    unsubscribe();
   });
 });
